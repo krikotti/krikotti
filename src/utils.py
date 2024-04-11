@@ -2,7 +2,7 @@
 import json
 
 def filter_records(records, date_threshold):
-    filtered_records = [record for record in records if record['createdAt'] >= date_threshold]
+    filtered_records = [record for record in records if float(record['createdAt']) >= date_threshold]
     return filtered_records
 
 def count_records(records):
