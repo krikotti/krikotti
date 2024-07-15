@@ -1,0 +1,70 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:*",
+            "Resource": "arn:aws:s3:::tpc-aws-ted-dev-edpp-lake-corp-eu-central-1/corp_de_lake_hr*",
+            "Condition": {
+                "StringNotLike": {
+                    "aws:userId": [
+                        "AROAT22YQDRDIYEHTK5OW:*",
+                        "AROAT22YQDRDL7HBJFR5X:*",
+                        "AROAT22YQDRDIKOMX5FMT:*",
+                        "AROAT22YQDRDFDTFX62AS:*",
+                        "AROARQDFIIDYJ3QY7Y2V4:*",
+                        "AROARQDFIIDYGZAK6QHDV:*",
+                        "AROARQDFIIDYI7CHIPWY7:*"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "CORP SECURED Data Restriction",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": [
+                "s3:List*",
+                "s3:PutObject*",
+                "s3:GetObject*",
+                "s3:DeleteObject",
+                "s3:PutObjectACL",
+                "s3:GetObjectACL"
+            ],
+            "Resource": [
+                "arn:aws:s3:::tpc-aws-ted-dev-edpp-lake-corp-eu-central-1/corp_de_lake/hr/*",
+                "arn:aws:s3:::tpc-aws-ted-dev-edpp-lake-corp-eu-central-1/corp_de_lake.db/sn_hr*"
+            ],
+            "Condition": {
+                "StringNotLike": {
+                    "aws:PrincipalArn": [
+                        "arn:aws:iam::103291568368:role/TEC-EC2-DATABRICKS-DEDEV-UNITY-STORAGECREDS-PII-ROLE",
+                        "arn:aws:iam::103291568368:role/TEC-EC2-DATABRICKS-DEDEV-CORP-SECURED",
+                        "arn:aws:iam::263789222982:role/DEV-APMS-92123-CORP-SECURED-DE",
+                        "arn:aws:iam::263789222982:role/edpp-lambda-corphr-exec",
+                        "arn:aws:iam::263789222982:role/edpp-lambda-exec",
+                        "arn:aws:iam::263789222982:role/role-USInformaticaCloudInstall"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "E2 SQL Cross Account access from TED Dev Account",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::103291568368:root"
+            },
+            "Action": [
+                "s3:List*",
+                "s3:GetObject*",
+                "s3:PutObject*",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::tpc-aws-ted-dev-edpp-lake-corp-eu-central-1",
+                "arn:aws:s3:::tpc-aws-ted-dev-edpp-lake-corp-eu-central-1/*"
+            ]
+        }
+    ]
+}
